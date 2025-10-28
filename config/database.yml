@@ -1,0 +1,30 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV.fetch("DB_USERNAME", "root") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "password") %>
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", "3306") %>
+
+development:
+  <<: *default
+  database: nhaituvung_api_development
+
+test:
+  <<: *default
+  database: nhaituvung_api_test
+
+staging:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "nhaituvung_staging") %>
+  username: <%= ENV.fetch("DB_USERNAME") %>
+  password: <%= ENV.fetch("DB_PASSWORD") %>
+  host: <%= ENV.fetch("DB_HOST") %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "nhaituvung_api_production") %>
+  username: <%= ENV.fetch("DB_USERNAME") %>
+  password: <%= ENV.fetch("DB_PASSWORD") %>
+  host: <%= ENV.fetch("DB_HOST") %>

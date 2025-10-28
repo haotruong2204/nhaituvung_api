@@ -1,10 +1,12 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore all environment files.
+# Secrets
 .env
 .env.*
 !.env.example
+**/secrets.yml
+**/credentials.yml
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -26,9 +28,6 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-# Ignore database configuration
-/config/database.yml
-
 # macOS
 .DS_Store
 
@@ -39,3 +38,17 @@ docker-compose.override.yml
 .vscode/
 .idea/
 
+terraform/.terraform/
+terraform/**/.terraform/
+terraform/**/.terraform.lock.hcl
+terraform/**/terraform.tfstate
+terraform/**/terraform.tfstate.backup
+terraform/**/*.tfvars
+terraform/**/*.tfvars.json
+terraform/**/.terraform.tfstate.lock.info
+*.tfvars
+*.tfvars.json
+
+.aws/
+*.pem
+aws-credentials.txt
