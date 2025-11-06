@@ -163,6 +163,37 @@ resource "aws_security_group" "rds" {
   }
 }
 
+# Redis Security Group
+resource "aws_security_group" "redis" {
+  name_prefix = "${local.name_prefix}-redis-"
+  description = "Security group for ElastiCache Redis"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "Redis from ECS"
+    from_port       = 6379
+    to_port         = 6379
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs.id]
+  }
+
+  egress {
+    description = "Allow all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${local.name_prefix}-redis-sg"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 ###########################################
 # ECR
 ###########################################
@@ -270,6 +301,45 @@ resource "aws_db_instance" "main" {
 
   tags = {
     Name = "${local.name_prefix}-rds"
+  }
+}
+
+###########################################
+# ElastiCache Redis - Single node for dev
+###########################################
+
+resource "aws_elasticache_subnet_group" "main" {
+  name_prefix = "${local.name_prefix}-redis-"
+  subnet_ids  = [aws_subnet.private.id, aws_subnet.private_2.id]
+  description = "ElastiCache subnet group for Redis"
+
+  tags = {
+    Name = "${local.name_prefix}-redis-subnet-group"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_elasticache_cluster" "redis" {
+  cluster_id           = "${local.name_prefix}-redis"
+  engine               = "redis"
+  engine_version       = "7.0"
+  node_type            = var.redis_node_type
+  num_cache_nodes      = 1
+  parameter_group_name = "default.redis7"
+  port                 = 6379
+
+  subnet_group_name  = aws_elasticache_subnet_group.main.name
+  security_group_ids = [aws_security_group.redis.id]
+
+  # Dev optimizations
+  snapshot_retention_limit = 0 # No snapshots for dev
+  apply_immediately        = true
+
+  tags = {
+    Name = "${local.name_prefix}-redis"
   }
 }
 
@@ -391,6 +461,10 @@ resource "aws_ecs_task_definition" "app" {
         {
           name  = "DB_PASSWORD"
           value = var.db_password
+        },
+        {
+          name  = "REDIS_URL"
+          value = "redis://${aws_elasticache_cluster.redis.cache_nodes[0].address}:6379/0"
         }
       ]
 

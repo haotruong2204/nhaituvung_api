@@ -8,6 +8,22 @@ output "rds_endpoint" {
   value       = aws_db_instance.main.endpoint
 }
 
+output "redis_endpoint" {
+  description = "Redis Primary Endpoint"
+  value       = aws_elasticache_cluster.redis.cache_nodes[0].address
+}
+
+output "redis_port" {
+  description = "Redis Port"
+  value       = aws_elasticache_cluster.redis.cache_nodes[0].port
+}
+
+output "redis_url" {
+  description = "Redis Connection URL"
+  value       = "redis://${aws_elasticache_cluster.redis.cache_nodes[0].address}:${aws_elasticache_cluster.redis.cache_nodes[0].port}/0"
+  sensitive   = true
+}
+
 output "ecs_cluster_name" {
   description = "ECS Cluster Name"
   value       = aws_ecs_cluster.main.name
@@ -35,6 +51,7 @@ output "deployment_summary" {
   
   🐳 ECR: ${aws_ecr_repository.app.repository_url}
   🗄️  RDS: ${aws_db_instance.main.address}:3306
+  🔴 Redis: ${aws_elasticache_cluster.redis.cache_nodes[0].address}:6379
   📊 Logs: ${aws_cloudwatch_log_group.app.name}
   
   ⚠️  To access app:

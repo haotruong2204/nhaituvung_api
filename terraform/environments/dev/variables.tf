@@ -84,3 +84,10 @@ variable "secret_key_base" {
   type        = string
   sensitive   = true
 }
+
+# ElastiCache Redis
+variable "redis_node_type" {
+  description = "Redis node type"
+  type        = string
+  default     = "cache.t3.micro" # Smallest for dev
+}
