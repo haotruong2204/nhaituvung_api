@@ -406,15 +406,11 @@ resource "aws_cloudwatch_log_group" "app" {
 ###########################################
 
 resource "aws_db_subnet_group" "main" {
-  name_prefix = "${local.name_prefix}-db-"
-  subnet_ids  = aws_subnet.private[*].id
+  name       = "${local.name_prefix}-db-subnet-group"
+  subnet_ids = aws_subnet.private[*].id
 
   tags = {
     Name = "${local.name_prefix}-db-subnet-group"
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
@@ -456,16 +452,12 @@ resource "aws_db_instance" "main" {
 ###########################################
 
 resource "aws_elasticache_subnet_group" "main" {
-  name_prefix = "${local.name_prefix}-redis-"
+  name        = "${local.name_prefix}-redis-subnet-group"
   subnet_ids  = aws_subnet.private[*].id
   description = "ElastiCache subnet group for Redis"
 
   tags = {
     Name = "${local.name_prefix}-redis-subnet-group"
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
@@ -713,13 +705,11 @@ resource "aws_ecs_service" "app" {
 
   health_check_grace_period_seconds = 120
 
-  deployment_configuration {
-    maximum_percent         = 200
-    minimum_healthy_percent = 100
-    deployment_circuit_breaker {
-      enable   = true
-      rollback = true
-    }
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = 100
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
   }
 
   # Enable ECS Exec for debugging (optional)
