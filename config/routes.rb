@@ -1,4 +1,9 @@
 require "sidekiq/web"
+require "sidekiq-status/web"
+require "sidekiq-scheduler/web"
+
+Sidekiq::Web.use ActionDispatch::Cookies
+Sidekiq::Web.use Rails.application.config.session_store, Rails.application.config.session_options
 
 Rails.application.routes.draw do
   # Sidekiq Web UI (protect this in production!)
