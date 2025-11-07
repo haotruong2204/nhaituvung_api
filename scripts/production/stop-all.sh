@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stop all services in production-demo environment
+# Stop all services in production environment
 # This script will stop ECS tasks and RDS to save cost
 # Note: ALB and Redis will continue running and charging
 
@@ -8,9 +8,9 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-TF_DIR="$PROJECT_ROOT/terraform/environments/production-demo"
+TF_DIR="$PROJECT_ROOT/terraform/environments/production"
 
-echo "🛑 Stopping Production-Demo Services..."
+echo "🛑 Stopping Production Services..."
 echo "=========================================="
 echo ""
 
@@ -56,7 +56,7 @@ aws ecs update-service \
     --cluster "$CLUSTER_NAME" \
     --service "$SERVICE_NAME" \
     --desired-count 0 \
-    --profile "$AWS_PROFILE" \
+    \
     --no-cli-pager \
     >/dev/null
 
@@ -66,7 +66,7 @@ echo ""
 echo "2️⃣  Stopping RDS Instance..."
 aws rds stop-db-instance \
     --db-instance-identifier "$DB_IDENTIFIER" \
-    --profile "$AWS_PROFILE" \
+    \
     --no-cli-pager \
     >/dev/null 2>&1 || echo "   ⚠️  RDS might already be stopped or stopping"
 

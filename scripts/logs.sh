@@ -23,6 +23,6 @@ sleep 2
 
 aws logs tail $LOG_GROUP \
   --follow \
-  --profile $PROFILE \
+  \
   --region $REGION \
   --format short

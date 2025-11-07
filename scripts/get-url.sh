@@ -23,7 +23,7 @@ TASK_ARN=$(aws ecs list-tasks \
   --service-name $SERVICE \
   --desired-status RUNNING \
   --region $REGION \
-  --profile $PROFILE \
+  \
   --query 'taskArns[0]' \
   --output text 2>/dev/null)
 
@@ -51,14 +51,14 @@ TASK_DETAILS=$(aws ecs describe-tasks \
   --cluster $CLUSTER \
   --tasks $TASK_ARN \
   --region $REGION \
-  --profile $PROFILE 2>/dev/null)
+  2>/dev/null)
 
 ENI_ID=$(echo $TASK_DETAILS | jq -r '.tasks[0].attachments[0].details[] | select(.name=="networkInterfaceId") | .value')
 
 PUBLIC_IP=$(aws ec2 describe-network-interfaces \
   --network-interface-ids $ENI_ID \
   --region $REGION \
-  --profile $PROFILE \
+  \
   --query 'NetworkInterfaces[0].Association.PublicIp' \
   --output text 2>/dev/null)
 

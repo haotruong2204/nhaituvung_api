@@ -2,7 +2,7 @@
 
 set -e
 
-export AWS_PROFILE=nhaituvung
+# export AWS_PROFILE=nhaituvung # Using default AWS profile
 REGION=ap-southeast-1
 
 cd terraform/environments/dev
@@ -22,7 +22,7 @@ cd ../../..
 
 # Login to ECR
 echo "🔐 Logging in to ECR..."
-aws ecr get-login-password --region $REGION --profile nhaituvung | \
+aws ecr get-login-password --region $REGION | \
   docker login --username AWS --password-stdin $ECR_URL
 
 # Build image
@@ -48,14 +48,14 @@ aws ecs update-service \
   --service $SERVICE \
   --force-new-deployment \
   --region $REGION \
-  --profile nhaituvung > /dev/null
+  > /dev/null
 
 echo ""
 echo "✅ Done! Wait a few moments for the service to update..."
 echo ""
 echo "📊 Check deployment status:"
-echo "   aws ecs describe-services --cluster $CLUSTER --services $SERVICE --profile nhaituvung --region $REGION"
+echo "   aws ecs describe-services --cluster $CLUSTER --services $SERVICE --region $REGION"
 echo ""
 echo "📋 View logs:"
-echo "   aws logs tail /ecs/nhaituvung-staging-app --follow --profile nhaituvung --region $REGION"
+echo "   aws logs tail /ecs/nhaituvung-staging-app --follow --region $REGION"
 echo ""

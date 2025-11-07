@@ -12,8 +12,8 @@ echo ""
 
 # Cấu hình
 REGION="ap-southeast-1"
-PROFILE="nhaituvung"
-TERRAFORM_DIR="terraform/environments/dev"
+# PROFILE="nhaituvung" # Using default AWS profile
+TERRAFORM_DIR="terraform/environments/production"
 
 # Lấy thông tin từ Terraform outputs
 echo "📋 Lấy thông tin từ Terraform..."
@@ -38,7 +38,7 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🔐 Bước 1/4: Login vào ECR..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-aws ecr get-login-password --region $REGION --profile $PROFILE | \
+aws ecr get-login-password --region $REGION | \
   docker login --username AWS --password-stdin $ECR_URL
 echo "   ✓ Đăng nhập thành công!"
 echo ""
@@ -69,7 +69,7 @@ aws ecs update-service \
   --service $SERVICE \
   --force-new-deployment \
   --region $REGION \
-  --profile $PROFILE \
+  \
   --no-cli-pager > /dev/null
 echo "   ✓ Deployment đã được khởi động!"
 echo ""

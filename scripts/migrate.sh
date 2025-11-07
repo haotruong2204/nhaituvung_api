@@ -21,7 +21,7 @@ TASK_ARN=$(aws ecs list-tasks \
   --service-name $SERVICE \
   --desired-status RUNNING \
   --region $REGION \
-  --profile $PROFILE \
+  \
   --query 'taskArns[0]' \
   --output text)
 
@@ -43,7 +43,7 @@ aws ecs execute-command \
   --container app \
   --interactive \
   --command "bundle exec rails db:migrate" \
-  --profile $PROFILE \
+  \
   --region $REGION
 
 echo ""

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export AWS_PROFILE=nhaituvung
+# export AWS_PROFILE=nhaituvung # Using default AWS profile
 cd terraform/environments/dev
 
 CLUSTER=$(terraform output -raw ecs_cluster_name)
@@ -20,7 +20,7 @@ TASK_ARN=$(aws ecs list-tasks \
 if [ "$TASK_ARN" == "None" ] || [ -z "$TASK_ARN" ]; then
   echo "❌ No running tasks found"
   echo "   Check ECS service status:"
-  echo "   aws ecs describe-services --cluster $CLUSTER --services $SERVICE --profile nhaituvung"
+  echo "   aws ecs describe-services --cluster $CLUSTER --services $SERVICE"
   exit 1
 fi
 
@@ -57,5 +57,5 @@ echo "   Health Check: http://$PUBLIC_IP:3000/up"
 echo "   Posts API:    http://$PUBLIC_IP:3000/api/v1/posts"
 echo ""
 echo "📊 View logs:"
-echo "   aws logs tail /ecs/nhaituvung-staging-app --follow --profile nhaituvung --region ap-southeast-1"
+echo "   aws logs tail /ecs/nhaituvung-staging-app --follow --region ap-southeast-1"
 echo ""

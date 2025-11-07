@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Check status of all services in production-demo environment
+# Check status of all services in production environment
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-TF_DIR="$PROJECT_ROOT/terraform/environments/production-demo"
+TF_DIR="$PROJECT_ROOT/terraform/environments/production"
 
-echo "📊 Production-Demo Status"
+echo "📊 Production Status"
 echo "=========================================="
 echo ""
 
@@ -31,7 +31,7 @@ echo "🐳 ECS Service Status:"
 ECS_INFO=$(aws ecs describe-services \
     --cluster "$CLUSTER_NAME" \
     --services "$SERVICE_NAME" \
-    --profile "$AWS_PROFILE" \
+    \
     --no-cli-pager \
     --output json)
 
@@ -53,7 +53,7 @@ echo ""
 echo "🗄️  RDS Status:"
 RDS_STATUS=$(aws rds describe-db-instances \
     --db-instance-identifier "$DB_IDENTIFIER" \
-    --profile "$AWS_PROFILE" \
+    \
     --no-cli-pager \
     --output json | jq -r '.DBInstances[0].DBInstanceStatus')
 
@@ -74,7 +74,7 @@ fi
 echo ""
 echo "🔴 Redis Status:"
 REDIS_STATUS=$(aws elasticache describe-cache-clusters \
-    --profile "$AWS_PROFILE" \
+    \
     --no-cli-pager \
     --output json 2>/dev/null | jq -r ".CacheClusters[] | select(.CacheClusterId | contains(\"$DB_IDENTIFIER\")) | .CacheClusterStatus" || echo "unknown")
 

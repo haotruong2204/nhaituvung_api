@@ -19,7 +19,7 @@ SERVICE_INFO=$(aws ecs describe-services \
   --cluster $CLUSTER \
   --services $SERVICE \
   --region $REGION \
-  --profile $PROFILE)
+ )
 
 # Parse thông tin
 STATUS=$(echo $SERVICE_INFO | jq -r '.services[0].status')

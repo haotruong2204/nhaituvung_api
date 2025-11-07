@@ -33,7 +33,7 @@ aws ecs update-service \
   --service $SERVICE \
   --desired-count 0 \
   --region $REGION \
-  --profile $PROFILE \
+  \
   --no-cli-pager > /dev/null
 
 echo "   ✓ Service đã được stop!"

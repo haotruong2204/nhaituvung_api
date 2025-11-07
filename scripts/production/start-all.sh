@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Start all services in production-demo environment
+# Start all services in production environment
 # This script will start RDS and ECS tasks
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-TF_DIR="$PROJECT_ROOT/terraform/environments/production-demo"
+TF_DIR="$PROJECT_ROOT/terraform/environments/production"
 
-echo "🚀 Starting Production-Demo Services..."
+echo "🚀 Starting Production Services..."
 echo "=========================================="
 echo ""
 
@@ -56,14 +56,14 @@ echo ""
 echo "1️⃣  Starting RDS Instance..."
 aws rds start-db-instance \
     --db-instance-identifier "$DB_IDENTIFIER" \
-    --profile "$AWS_PROFILE" \
+    \
     --no-cli-pager \
     >/dev/null 2>&1 || echo "   ⚠️  RDS might already be starting or running"
 
 echo "   ⏳ Waiting for RDS to be available (this takes 5-7 minutes)..."
 aws rds wait db-instance-available \
     --db-instance-identifier "$DB_IDENTIFIER" \
-    --profile "$AWS_PROFILE" \
+    \
     2>&1 | grep -v "Waiting" || true
 
 echo "   ✅ RDS is now available"
@@ -74,7 +74,7 @@ aws ecs update-service \
     --cluster "$CLUSTER_NAME" \
     --service "$SERVICE_NAME" \
     --desired-count "$DESIRED_COUNT" \
-    --profile "$AWS_PROFILE" \
+    \
     --no-cli-pager \
     >/dev/null
 
@@ -86,7 +86,7 @@ RUNNING_TASKS=$(aws ecs list-tasks \
     --cluster "$CLUSTER_NAME" \
     --service-name "$SERVICE_NAME" \
     --desired-status RUNNING \
-    --profile "$AWS_PROFILE" \
+    \
     --no-cli-pager \
     --output json | jq -r '.taskArns | length')
 

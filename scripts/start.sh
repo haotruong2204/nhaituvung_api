@@ -25,7 +25,7 @@ aws ecs update-service \
   --service $SERVICE \
   --desired-count 1 \
   --region $REGION \
-  --profile $PROFILE \
+  \
   --no-cli-pager > /dev/null
 
 echo "   ✓ Service đã được start!"
