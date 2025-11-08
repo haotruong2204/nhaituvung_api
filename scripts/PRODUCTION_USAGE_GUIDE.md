@@ -1,15 +1,5 @@
 # Scripts Production - Hướng Dẫn Sử Dụng
 
-## 📋 Tổng Quan
-
-Tất cả scripts đã được cập nhật để:
-
-- ✅ Sử dụng **default AWS profile** (không cần --profile flag)
-- ✅ Deploy lên **terraform/environments/production**
-- ✅ Loại bỏ tất cả hardcoded profile `nhaituvung`
-
----
-
 ## 🚀 Scripts Production
 
 ### **Trong thư mục `scripts/production/`:**

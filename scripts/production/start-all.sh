@@ -7,9 +7,9 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-TF_DIR="$PROJECT_ROOT/terraform/environments/production-demo"
+TF_DIR="$PROJECT_ROOT/terraform/environments/production"
 
-echo "🚀 Starting Production-Demo Services..."
+echo "🚀 Starting Production Services..."
 echo "=========================================="
 echo ""
 
@@ -27,7 +27,7 @@ CLUSTER_NAME=$(terraform output -raw ecs_cluster_name 2>/dev/null || echo "")
 SERVICE_NAME=$(terraform output -raw ecs_service_name 2>/dev/null || echo "")
 DESIRED_COUNT=$(terraform output -json | jq -r '.deployment_summary.value' | grep -oP 'Tasks: \K\d+' | head -1 2>/dev/null || echo "2")
 DB_IDENTIFIER=$(terraform output -json | jq -r '.rds_endpoint.value' | cut -d':' -f1 | cut -d'.' -f1 2>/dev/null || echo "")
-AWS_PROFILE=$(terraform output -raw aws_profile 2>/dev/null || echo "nhaituvung")
+AWS_PROFILE=$(terraform output -raw aws_profile 2>/dev/null || echo "default")
 ALB_URL=$(terraform output -raw alb_url 2>/dev/null || echo "")
 
 if [ -z "$CLUSTER_NAME" ] || [ -z "$SERVICE_NAME" ]; then

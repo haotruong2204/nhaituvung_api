@@ -28,12 +28,12 @@ aws ecr get-login-password --region $REGION --profile $PROFILE | \
 # Build image
 echo ""
 echo "🏗️  Building Docker image..."
-docker build -t nhaituvung-app .
+docker build -t nhaituvung-api .
 
 # Tag image
 echo ""
 echo "🏷️  Tagging image..."
-docker tag nhaituvung-app:latest $ECR_URL:latest
+docker tag nhaituvung-api:latest $ECR_URL:latest
 
 # Push image
 echo ""

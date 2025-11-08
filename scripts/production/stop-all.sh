@@ -8,9 +8,9 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-TF_DIR="$PROJECT_ROOT/terraform/environments/production-demo"
+TF_DIR="$PROJECT_ROOT/terraform/environments/production"
 
-echo "🛑 Stopping Production-Demo Services..."
+echo "🛑 Stopping Production Services..."
 echo "=========================================="
 echo ""
 

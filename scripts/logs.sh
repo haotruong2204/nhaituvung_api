@@ -6,7 +6,7 @@
 
 REGION="ap-southeast-1"
 PROFILE="default"
-LOG_GROUP="/ecs/nhaituvung-production-app"
+LOG_GROUP="/ecs/nhaituvung-production-api"
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📝 XEM LOGS REALTIME"

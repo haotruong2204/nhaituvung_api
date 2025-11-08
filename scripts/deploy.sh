@@ -47,7 +47,7 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🏗️  Bước 2/4: Build Docker image..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-docker build -t nhaituvung-app .
+docker build -t nhaituvung-api .
 echo "   ✓ Build thành công!"
 echo ""
 
@@ -55,7 +55,7 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "⬆️  Bước 3/4: Push image lên ECR..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-docker tag nhaituvung-app:latest $ECR_URL:latest
+docker tag nhaituvung-api:latest $ECR_URL:latest
 docker push $ECR_URL:latest
 echo "   ✓ Push thành công!"
 echo ""
