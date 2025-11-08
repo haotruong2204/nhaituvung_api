@@ -5,9 +5,9 @@
 # Ngày tạo: 29/10/2025
 
 REGION="ap-southeast-1"
-PROFILE="nhaituvung"
-CLUSTER="nhaituvung-staging-cluster"
-SERVICE="nhaituvung-staging-service"
+PROFILE="default"
+CLUSTER="nhaituvung-production-cluster"
+SERVICE="nhaituvung-production-service"
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "▶️  START ECS SERVICE"

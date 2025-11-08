@@ -12,8 +12,8 @@ echo ""
 
 # Cấu hình
 REGION="ap-southeast-1"
-PROFILE="nhaituvung"
-TERRAFORM_DIR="terraform/environments/dev"
+PROFILE="default"
+TERRAFORM_DIR="terraform/environments/production"
 
 # Lấy thông tin từ Terraform outputs
 echo "📋 Lấy thông tin từ Terraform..."

@@ -5,8 +5,8 @@
 # Ngày tạo: 29/10/2025
 
 REGION="ap-southeast-1"
-PROFILE="nhaituvung"
-LOG_GROUP="/ecs/nhaituvung-staging-app"
+PROFILE="default"
+LOG_GROUP="/ecs/nhaituvung-production-app"
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📝 XEM LOGS REALTIME"

@@ -12,9 +12,9 @@ echo ""
 
 # Cấu hình
 REGION="ap-southeast-1"
-PROFILE="nhaituvung"
-CLUSTER="nhaituvung-staging-cluster"
-SERVICE="nhaituvung-staging-service"
+PROFILE="default"
+CLUSTER="nhaituvung-production-cluster"
+SERVICE="nhaituvung-production-service"
 
 # Lấy task đang chạy
 echo "🔍 Đang tìm ECS task..."
