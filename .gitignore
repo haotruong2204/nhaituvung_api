@@ -37,7 +37,9 @@ docker-compose.override.yml
 # Editor
 .vscode/
 .idea/
+.ruby-lsp/
 
+# Terraform
 terraform/.terraform/
 terraform/**/.terraform/
 terraform/**/.terraform.lock.hcl
@@ -46,9 +48,17 @@ terraform/**/terraform.tfstate.backup
 terraform/**/*.tfvars
 terraform/**/*.tfvars.json
 terraform/**/.terraform.tfstate.lock.info
+terraform/**/*.tfplan
+terraform/**/tfplan*
 *.tfvars
 *.tfvars.json
+*.tfplan
+tfplan*
 
+# AWS
 .aws/
 *.pem
 aws-credentials.txt
+
+# Ruby LSP
+.ruby-lsp/

@@ -8,6 +8,21 @@ output "alb_url" {
   value       = "http://${aws_lb.main.dns_name}"
 }
 
+output "custom_domain" {
+  description = "Custom Domain Name"
+  value       = var.domain_name != "" ? "${var.subdomain}.${var.domain_name}" : "Not configured"
+}
+
+output "api_url" {
+  description = "API URL (HTTPS if domain configured, HTTP otherwise)"
+  value       = var.domain_name != "" && var.enable_https ? "https://${var.subdomain}.${var.domain_name}" : "http://${aws_lb.main.dns_name}"
+}
+
+output "certificate_arn" {
+  description = "ACM Certificate ARN"
+  value       = var.enable_https && var.domain_name != "" ? aws_acm_certificate.main[0].arn : "Not configured"
+}
+
 output "ecr_repository_url" {
   description = "ECR Repository URL"
   value       = aws_ecr_repository.app.repository_url

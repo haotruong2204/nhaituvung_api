@@ -335,19 +335,45 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-# Optional: HTTPS listener (requires ACM certificate)
-# resource "aws_lb_listener" "https" {
-#   load_balancer_arn = aws_lb.main.arn
-#   port              = "443"
-#   protocol          = "HTTPS"
-#   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-#   certificate_arn   = var.acm_certificate_arn
-#
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.app.arn
-#   }
-# }
+# HTTPS listener with ACM certificate
+resource "aws_lb_listener" "https" {
+  count             = var.enable_https && var.domain_name != "" ? 1 : 0
+  load_balancer_arn = aws_lb.main.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = aws_acm_certificate.main[0].arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app.arn
+  }
+
+  depends_on = [aws_acm_certificate_validation.main]
+}
+
+# HTTP to HTTPS redirect
+resource "aws_lb_listener_rule" "redirect_http_to_https" {
+  count        = var.enable_https && var.domain_name != "" ? 1 : 0
+  listener_arn = aws_lb_listener.http.arn
+  priority     = 1
+
+  action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  condition {
+    host_header {
+      values = [local.full_domain]
+    }
+  }
+}
 
 ###########################################
 # ECR
@@ -533,7 +559,7 @@ resource "aws_iam_role" "ecs_task" {
   }
 }
 
-# Optional: Add policies for ECS Exec, CloudWatch, etc.
+# Policies for ECS Exec, CloudWatch, etc.
 resource "aws_iam_role_policy" "ecs_task_cloudwatch" {
   name = "cloudwatch-logs"
   role = aws_iam_role.ecs_task.id
@@ -548,6 +574,28 @@ resource "aws_iam_role_policy" "ecs_task_cloudwatch" {
           "logs:PutLogEvents"
         ]
         Resource = "${aws_cloudwatch_log_group.app.arn}:*"
+      }
+    ]
+  })
+}
+
+# Policy for ECS Exec (SSM Session Manager)
+resource "aws_iam_role_policy" "ecs_task_ssm" {
+  name = "ecs-exec-ssm"
+  role = aws_iam_role.ecs_task.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel"
+        ]
+        Resource = "*"
       }
     ]
   })
@@ -712,8 +760,8 @@ resource "aws_ecs_service" "app" {
     rollback = true
   }
 
-  # Enable ECS Exec for debugging (optional)
-  # enable_execute_command = true
+  # Enable ECS Exec for debugging
+  enable_execute_command = true
 
   depends_on = [
     aws_lb_listener.http
@@ -800,5 +848,69 @@ resource "aws_appautoscaling_policy" "ecs_requests" {
     target_value       = 1000.0
     scale_in_cooldown  = 300
     scale_out_cooldown = 60
+  }
+}
+
+###########################################
+# ACM Certificate for Custom Domain
+###########################################
+
+locals {
+  full_domain = var.domain_name != "" ? "${var.subdomain}.${var.domain_name}" : ""
+}
+
+resource "aws_acm_certificate" "main" {
+  count             = var.enable_https && var.domain_name != "" ? 1 : 0
+  domain_name       = local.full_domain
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = {
+    Name = "${local.name_prefix}-cert"
+  }
+}
+
+# Route53 record for ACM certificate validation
+resource "aws_route53_record" "cert_validation" {
+  for_each = var.enable_https && var.domain_name != "" ? {
+    for dvo in aws_acm_certificate.main[0].domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  } : {}
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = var.route53_zone_id
+}
+
+# ACM certificate validation
+resource "aws_acm_certificate_validation" "main" {
+  count                   = var.enable_https && var.domain_name != "" ? 1 : 0
+  certificate_arn         = aws_acm_certificate.main[0].arn
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+}
+
+###########################################
+# Route53 A Record for Custom Domain
+###########################################
+
+resource "aws_route53_record" "api" {
+  count   = var.domain_name != "" ? 1 : 0
+  zone_id = var.route53_zone_id
+  name    = local.full_domain
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.main.dns_name
+    zone_id                = aws_lb.main.zone_id
+    evaluate_target_health = true
   }
 }

@@ -141,3 +141,28 @@ variable "enable_container_insights" {
   type        = bool
   default     = false # Disable to save cost
 }
+
+# Domain Configuration
+variable "domain_name" {
+  description = "Root domain name (e.g., nhaituvung.com)"
+  type        = string
+  default     = ""
+}
+
+variable "subdomain" {
+  description = "Subdomain for API (e.g., api)"
+  type        = string
+  default     = "api"
+}
+
+variable "route53_zone_id" {
+  description = "Route53 Hosted Zone ID"
+  type        = string
+  default     = ""
+}
+
+variable "enable_https" {
+  description = "Enable HTTPS with ACM certificate"
+  type        = bool
+  default     = true
+}
