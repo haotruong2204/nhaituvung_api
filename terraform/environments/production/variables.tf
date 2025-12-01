@@ -144,7 +144,7 @@ variable "enable_container_insights" {
 
 # Domain Configuration
 variable "domain_name" {
-  description = "Root domain name (e.g., nhaituvung.com)"
+  description = "Root domain name (e.g., nhaikanji.com)"
   type        = string
   default     = ""
 }

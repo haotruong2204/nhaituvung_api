@@ -1832,7 +1832,7 @@ Sau khi đã hiểu rõ CLI commands, bạn có thể:
 
 4. **SSL/HTTPS:** Setup ACM certificate và configure ALB listener
 
-5. **Custom Domain:** Point api.nhaituvung.com tới ALB
+5. **Custom Domain:** Point api.nhaikanji.com tới ALB
 
 6. **Auto-scaling:** Configure ECS service auto-scaling based on metrics
 

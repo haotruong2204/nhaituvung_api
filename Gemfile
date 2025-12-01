@@ -37,11 +37,46 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+gem "rack-cors"
+
+# Rate limiting and protection against abuse
+gem "rack-attack"
+
+# Api json serializer
+gem "jsonapi-serializer"
+
+# Paginate
+gem "pagy"
+
+# Search
+gem "ransack"
+
+# Strip attribute before commit
+gem "strip_attributes"
+
+# Config common variables
+gem "config"
+
+# Docs API
+gem "rswag"
+
+# Request third party api
+gem "httparty"
+
+# Authentication
+gem "devise"
+gem "devise-jwt"
+gem "oauth"
 
 group :development, :test do
   gem "pry-byebug"
   gem "pry-rails"
+
+  # Convention
+  gem "rubocop", require: false
+  gem "rubocop-performance"
+  gem "rubocop-rspec"
+  gem "rubocop-rake"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
@@ -51,4 +86,22 @@ group :development, :test do
 
   # Environment variables
   gem "dotenv-rails"
+
+  # Unit Test
+  gem "rspec"
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "database_cleaner"
+  gem "faker", git: "https://github.com/faker-ruby/faker.git", branch: "main"
+end
+
+group :development do
+  # Schema in model
+  gem "annotate"
+end
+
+group :test do
+  # Use system testing
+  gem "shoulda-matchers", "~> 3.1"
+  gem "simplecov", require: false
 end

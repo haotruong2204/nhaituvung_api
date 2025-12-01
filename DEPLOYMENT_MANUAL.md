@@ -60,7 +60,7 @@ aws sts get-caller-identity
 
 ```bash
 # Kiểm tra hosted zone
-aws route53 list-hosted-zones --query 'HostedZones[?Name==`nhaituvung.com.`]'
+aws route53 list-hosted-zones --query 'HostedZones[?Name==`nhaikanji.com.`]'
 
 # Lưu lại Hosted Zone ID
 # Expected: Z0292892220G6OADIHM9E
@@ -102,7 +102,7 @@ ecs_task_memory = "512"
 secret_key_base = "YOUR_SECRET_KEY_BASE_HERE"
 
 # Domain
-domain_name      = "nhaituvung.com"
+domain_name      = "nhaikanji.com"
 subdomain        = "api"
 route53_zone_id  = "Z0292892220G6OADIHM9E"
 enable_https     = true
@@ -133,7 +133,7 @@ terraform plan -out=tfplan
 - Security Groups (ALB, ECS, RDS, Redis)
 - Application Load Balancer (ALB)
 - Target Group
-- ACM Certificate cho `api.nhaituvung.com`
+- ACM Certificate cho `api.nhaikanji.com`
 - Route53 A Record
 - ECS Cluster
 - ECS Task Definition
@@ -171,7 +171,7 @@ watch -n 5 'terraform show | grep -E "resource|id ="'
 terraform output deployment_summary
 
 # Lưu lại các thông tin quan trọng:
-terraform output api_url              # https://api.nhaituvung.com
+terraform output api_url              # https://api.nhaikanji.com
 terraform output alb_dns_name         # ALB DNS name
 terraform output ecr_repository_url   # ECR URL
 terraform output certificate_arn      # ACM Certificate
@@ -436,7 +436,7 @@ aws logs tail /ecs/nhaituvung-production-app --since 2m --region ap-southeast-1
 
 ```bash
 # HTTPS
-curl -I https://api.nhaituvung.com/up
+curl -I https://api.nhaikanji.com/up
 
 # Expected: HTTP/2 200
 ```
@@ -444,23 +444,23 @@ curl -I https://api.nhaituvung.com/up
 ### 6.2. Test HTTP to HTTPS redirect
 
 ```bash
-curl -I http://api.nhaituvung.com/up
+curl -I http://api.nhaikanji.com/up
 
 # Expected: HTTP/1.1 301 Moved Permanently
-# Location: https://api.nhaituvung.com:443/up
+# Location: https://api.nhaikanji.com:443/up
 ```
 
 ### 6.3. Test API endpoints
 
 ```bash
 # List posts
-curl https://api.nhaituvung.com/api/v1/posts | jq '.'
+curl https://api.nhaikanji.com/api/v1/posts | jq '.'
 
 # Get single post
-curl https://api.nhaituvung.com/api/v1/posts/1 | jq '.'
+curl https://api.nhaikanji.com/api/v1/posts/1 | jq '.'
 
 # Create post (nếu có authentication)
-curl -X POST https://api.nhaituvung.com/api/v1/posts \
+curl -X POST https://api.nhaikanji.com/api/v1/posts \
   -H "Content-Type: application/json" \
   -d '{"post":{"title":"Test Post","content":"Test content","published":true}}'
 ```
@@ -469,14 +469,14 @@ curl -X POST https://api.nhaituvung.com/api/v1/posts \
 
 ```bash
 # Mở browser
-open https://api.nhaituvung.com/sidekiq
+open https://api.nhaikanji.com/sidekiq
 ```
 
 ### 6.5. Verify SSL Certificate
 
 ```bash
 # Check certificate details
-openssl s_client -connect api.nhaituvung.com:443 -servername api.nhaituvung.com < /dev/null | openssl x509 -noout -text | grep -E "Subject:|Issuer:|Not"
+openssl s_client -connect api.nhaikanji.com:443 -servername api.nhaikanji.com < /dev/null | openssl x509 -noout -text | grep -E "Subject:|Issuer:|Not"
 
 # Hoặc dùng browser
 # → Click vào ô khóa trong address bar
@@ -620,8 +620,8 @@ terraform destroy
 - [ ] API endpoint trả về dữ liệu
 
 ### Domain & SSL
-- [ ] https://api.nhaituvung.com/up → 200 OK
-- [ ] http://api.nhaituvung.com → redirect to HTTPS
+- [ ] https://api.nhaikanji.com/up → 200 OK
+- [ ] http://api.nhaikanji.com → redirect to HTTPS
 - [ ] SSL certificate valid
 - [ ] API endpoints hoạt động qua HTTPS
 
