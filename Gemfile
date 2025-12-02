@@ -20,7 +20,7 @@ gem "redis", "~> 5.0"
 gem "hiredis-client", "~> 0.22"
 
 # Use Sidekiq for background jobs
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 8.0"
 gem "sidekiq-status"
 gem "sidekiq-scheduler"
 
