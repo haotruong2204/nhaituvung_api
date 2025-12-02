@@ -172,7 +172,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.15.2)
+    json (2.16.0)
     json-schema (6.0.0)
       addressable (~> 2.8)
       bigdecimal (~> 3.1)
@@ -253,7 +253,7 @@ GEM
       version_gem (~> 1.1, >= 1.1.9)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
-    pagy (43.1.4)
+    pagy (43.1.8)
       json
       yaml
     parallel (1.27.0)
